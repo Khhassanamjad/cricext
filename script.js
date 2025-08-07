@@ -1,15 +1,6 @@
 const BASE_PATH = '/cricext'; // Important for GitHub Pages folder hosting
 
-// Redirect fix for GitHub Pages SPA
-if (
-  location.pathname !== BASE_PATH + '/' &&
-  !location.pathname.startsWith(BASE_PATH + '/')
-) {
-  const path = location.pathname.replace('/', '');
-  location.replace(`${BASE_PATH}/#/${path}`);
-}
-
-// Function to fetch and load page content
+// Load page content into #app
 function loadPage(url) {
   fetch(`${BASE_PATH}/${url}`)
     .then(res => {
@@ -21,34 +12,34 @@ function loadPage(url) {
       highlightActiveTab(url);
       if (url === 'cricext.html') fetchTweets();
     })
-    .catch(err => {
+    .catch(() => {
       document.getElementById('app').innerHTML = `<p>Page not found.</p>`;
     });
 }
 
-// Handle active nav tab highlighting
+// Highlight active link
 function highlightActiveTab(url) {
   document.querySelectorAll('a[data-link]').forEach(link => {
     link.classList.remove('active');
-    const linkHref = link.getAttribute('href').replace(BASE_PATH + '/', '');
+    const linkHref = link.getAttribute('href');
     if (linkHref === url) {
       link.classList.add('active');
     }
   });
 }
 
-// SPA navigation
+// SPA link clicks
 document.addEventListener('click', e => {
   const link = e.target.closest('a[data-link]');
   if (link) {
     e.preventDefault();
-    const href = link.getAttribute('href').replace(BASE_PATH + '/', '');
+    const href = link.getAttribute('href');
     history.pushState(null, '', `${BASE_PATH}/${href}`);
     loadPage(href);
   }
 });
 
-// Browser back/forward navigation
+// Handle browser navigation (back/forward)
 window.addEventListener('popstate', () => {
   const path = location.pathname.replace(BASE_PATH + '/', '') || 'index.html';
   loadPage(path);
@@ -70,7 +61,7 @@ function applySavedTheme() {
   }
 }
 
-// Hamburger menu toggle
+// Hamburger menu
 function toggleMenu() {
   const navLinks = document.querySelector('.nav-links');
   navLinks.classList.toggle('open');
@@ -83,7 +74,7 @@ function closeMenuOnResize() {
   }
 }
 
-// Fetch scorecards
+// Fetch scores
 function fetchScores() {
   fetch(`${BASE_PATH}/scores.json`)
     .then(res => res.json())
@@ -103,7 +94,7 @@ function fetchScores() {
         else extraSection.appendChild(card);
       });
 
-      if (data.length > 3) {
+      if (data.length > 3 && moreBtn) {
         moreBtn.style.display = 'block';
       }
     })
@@ -131,10 +122,12 @@ function createScoreCard(match) {
   return card;
 }
 
-// Toggle more scores
+// More scores toggle
 function toggleMoreScores() {
   const extraSection = document.getElementById('extra-score-section');
   const btn = document.getElementById('more-scores-btn');
+  if (!extraSection || !btn) return;
+
   if (extraSection.style.display === 'none') {
     extraSection.style.display = 'flex';
     btn.textContent = 'Hide Scores';
@@ -144,7 +137,7 @@ function toggleMoreScores() {
   }
 }
 
-// Fetch tweets
+// Tweets
 function fetchTweets() {
   fetch(`${BASE_PATH}/tweets.json`)
     .then(res => res.json())
@@ -190,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPage(path);
   fetchScores();
 
-  // Optional: register service worker (if using)
+  // Register service worker (optional)
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register(`${BASE_PATH}/service-worker.js`).catch(console.error);
   }
