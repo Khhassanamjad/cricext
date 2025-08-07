@@ -1,20 +1,21 @@
-const CACHE_NAME = 'cricext-cache-v1';
+const BASE = location.pathname;
 const FILES_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/script.js',
-  '/scores.json',
-  '/tweets.json',
-  '/logo.png',
-  '/stadium.png',
-  '/flags/india.png',
-  '/flags/pakistan.png',
-  '/flags/australia.png',
-  '/flags/england.png',
-  '/flags/south-africa.png',
-  '/flags/new-zealand.png',
+  `${BASE}`,
+  `${BASE}index.html`,
+  `${BASE}style.css`,
+  `${BASE}script.js`,
+  `${BASE}scores.json`,
+  `${BASE}tweets.json`,
+  `${BASE}logo.png`,
+  `${BASE}stadium.png`,
+  `${BASE}flags/india.png`,
+  `${BASE}flags/pakistan.png`,
+  `${BASE}flags/australia.png`,
+  `${BASE}flags/england.png`,
+  `${BASE}flags/south-africa.png`,
+  `${BASE}flags/new-zealand.png`,
 ];
+
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -45,3 +46,4 @@ self.addEventListener('fetch', (event) => {
     )
   );
 });
+
