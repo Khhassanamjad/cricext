@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Redirecting...</title>
-  <script>
-    // Redirect to base /cricext/ route and trigger the SPA to handle it
-    const redirectTo = '/cricext/';
-    const currentUrl = window.location.href;
-    const path = window.location.pathname;
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script type="text/javascript">
+      // Redirect everything under cricext/ to cricext/index.html
+      (function() {
+        var path = window.location.pathname;
+        var redirectPath = '/cricext/';
+        if (!path.startsWith(redirectPath)) {
+          // Not our concern
+          return;
+        }
 
-    // GitHub Pages puts 404s here; fix it for SPA routes
-    if (!path.includes('/cricext/')) {
-      window.location.replace(redirectTo);
-    } else {
-      // Trim to base if deep path
-      const relativePath = path.split('/cricext/')[1] || '';
-      window.location.replace(`/cricext/?path=${relativePath}`);
-    }
-  </script>
-</head>
-<body>
-  Redirecting...
-</body>
+        // Recover original route so the SPA can render it
+        var newUrl = redirectPath + '?redirect=' + encodeURIComponent(path.replace(redirectPath, ''));
+        window.location.replace(newUrl);
+      })();
+    </script>
+  </head>
+  <body>
+    Redirecting...
+  </body>
 </html>
