@@ -1,46 +1,47 @@
-// service-worker.js
-
-const CACHE_NAME = "cricext-cache-v1";
-const urlsToCache = [
-  "/",
-  "/index.html",
-  "/style.css",
-  "/script.js",
-  "/logo.png",
-  "/manifest.json",
-  "/scores.json",
-  // Add additional HTML/JS/CSS/images/fonts/json you want cached
+const CACHE_NAME = 'cricext-cache-v1';
+const FILES_TO_CACHE = [
+  '/',
+  '/index.html',
+  '/style.css',
+  '/script.js',
+  '/scores.json',
+  '/tweets.json',
+  '/logo.png',
+  '/stadium.png',
+  '/flags/india.png',
+  '/flags/pakistan.png',
+  '/flags/australia.png',
+  '/flags/england.png',
+  '/flags/south-africa.png',
+  '/flags/new-zealand.png',
 ];
 
-// Install Service Worker
-self.addEventListener("install", (event) => {
+self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache);
+      return cache.addAll(FILES_TO_CACHE);
     })
   );
+  self.skipWaiting();
 });
 
-// Fetch from cache first
-self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return cached || fetch(event.request);
-    })
-  );
-});
-
-// Activate SW and clean up old caches if any
-self.addEventListener("activate", (event) => {
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keyList) => {
-      return Promise.all(
+    caches.keys().then((keyList) =>
+      Promise.all(
         keyList.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
+          if (key !== CACHE_NAME) return caches.delete(key);
         })
-      );
-    })
+      )
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) =>
+      response || fetch(event.request)
+    )
   );
 });
