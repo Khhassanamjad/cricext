@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
     link.addEventListener("click", e => {
       e.preventDefault();
       const url = link.getAttribute("href");
-      if (location.pathname !== `/${url}`) {
+      if (location.pathname !== `/cricext/${url}`) {
         history.pushState(null, "", url);
         loadPage(url);
       }
@@ -201,18 +201,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   window.addEventListener("popstate", () => {
-    const url = location.pathname.substring(1) || "home.html";
+    const url = location.pathname.split("/").pop() || "home.html";
     loadPage(url);
   });
 
-  const initialPage = location.pathname.substring(1) || "home.html";
+  const initialPage = location.pathname.split("/").pop() || "home.html";
   loadPage(initialPage);
 });
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("/service-worker.js")
+      .register("/cricext/service-worker.js")
       .then(reg => {
         console.log("Service Worker registered:", reg);
       })
