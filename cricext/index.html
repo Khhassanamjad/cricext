@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CricEXT</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+
+<body class="stadium-bg">
+  <div class="overlay">
+    <nav class="navbar">
+      <div class="logo-container">
+        <a href="/home" data-link>
+          <img src="logo.png" alt="CricEXT Logo" class="logo" />
+        </a>
+      </div>
+
+      <div class="hamburger" id="hamburger">&#9776;</div>
+
+      <ul class="nav-links">
+        <li><a href="/home" class="nav-link" data-link>Home</a></li>
+        <li><a href="/cricext" class="nav-link" data-link>CricEXT</a></li>
+        <li><a href="/scores" class="nav-link" data-link>Live Scores</a></li>
+        <li><a href="/about" class="nav-link" data-link>About Us</a></li>
+        <li><a href="/contact" class="nav-link" data-link>Contact Us</a></li>
+        <li><button id="toggle-theme" class="theme-btn">🌓</button></li>
+      </ul>
+    </nav>
+
+    <!-- Dynamic content area -->
+    <div id="app">
+      <div class="scorecards-wrapper">
+        <!-- First 3 scorecards shown -->
+        <section id="score-section" class="score-section">
+          <!-- Scorecards will be dynamically injected here -->
+        </section>
+
+        <!-- Overlay section for extra scores -->
+        <div id="extra-score-section" class="score-overlay" style="display: none;"></div>
+
+        <!-- More Scores button -->
+        <button id="more-scores-btn" style="display: none;">More Scores</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

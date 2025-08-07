@@ -1,0 +1,30 @@
+[
+  {
+    "team1": "India",
+    "team2": "Pakistan",
+    "score1": "198/5 (20)",
+    "score2": "190/9 (20)",
+    "status": "India won by 8 runs"
+  },
+  {
+    "team1": "Australia",
+    "team2": "England",
+    "score1": "220/7 (20)",
+    "score2": "215/10 (19.5)",
+    "status": "Australia won by 5 runs"
+  },
+  {
+    "team1": "South Africa",
+    "team2": "New Zealand",
+    "score1": "175/8 (20)",
+    "score2": "160/7 (20)",
+    "status": "South Africa won by 15 runs"
+  },
+  {
+    "team1": "Sri-lanka",
+    "team2": "Bangladesh",
+    "score1": "177/8 (20)",
+    "score2": "160/7 (20)",
+    "status": "Srilanka won by 17 runs"
+  }
+]
