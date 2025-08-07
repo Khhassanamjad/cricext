@@ -1,3 +1,10 @@
+// 🔁 GitHub Pages redirect fix for SPA deep links
+if (!location.hash && location.pathname !== "/" && !location.pathname.endsWith("/cricext/")) {
+  const cleanPath = location.pathname.replace("/cricext", "").replace(/^\/+/, "");
+  window.history.replaceState({}, "", "/cricext/");
+  window.dispatchEvent(new PopStateEvent("popstate"));
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const toggle = document.getElementById("toggle-theme");
   const body = document.body;
@@ -209,6 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadPage(initialPage);
 });
 
+// 🔧 Service Worker
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
