@@ -167,6 +167,13 @@ function fetchTweets() {
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
+  // ✅ Handle redirect from 404.html with ?path=xyz
+  const query = new URLSearchParams(window.location.search);
+  const spaPath = query.get("path");
+  if (spaPath) {
+    history.replaceState(null, null, `${BASE_PATH}/${spaPath}`);
+  }
+
   applySavedTheme();
 
   const toggle = document.getElementById('toggle-theme');
