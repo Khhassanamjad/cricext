@@ -9,14 +9,18 @@
   <link rel="icon" href="logo.png" type="image/png" />
   <link rel="manifest" href="manifest.json" />
 
-  <!-- Insert SPA redirect handler -->
+  <!-- GitHub Pages SPA Redirect Handler -->
   <script>
-    // GitHub Pages SPA redirect handler
-    if (location.pathname.endsWith('.html')) {
-      const base = '/cricext/';
-      const page = location.pathname.split('/').pop();
-      location.replace(base + '?' + page);
-    }
+    (function () {
+      // If user lands on /cricext/ without any hash/query/path, manually redirect to default route
+      const isRoot = location.pathname === "/cricext/" || location.pathname === "/cricext";
+      const hasNoQueryOrHash = !location.search && !location.hash;
+
+      if (isRoot && hasNoQueryOrHash) {
+        // Redirect to home.html or any default internal SPA route
+        location.replace("/cricext/?home.html");
+      }
+    })();
   </script>
 </head>
 
