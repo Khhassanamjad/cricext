@@ -212,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("/cricext/service-worker.js")
+      .register("./service-worker.js")
       .then(reg => {
         console.log("Service Worker registered:", reg);
       })
