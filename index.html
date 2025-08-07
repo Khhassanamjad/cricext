@@ -3,18 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <base href="/cricext/">
+  <base href="/cricext/" />
   <title>CricEXT</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="logo.png" type="image/png" />
   <link rel="manifest" href="manifest.json" />
+
+  <!-- Insert SPA redirect handler -->
+  <script>
+    // GitHub Pages SPA redirect handler
+    if (location.pathname.endsWith('.html')) {
+      const base = '/cricext/';
+      const page = location.pathname.split('/').pop();
+      location.replace(base + '?' + page);
+    }
+  </script>
 </head>
 
 <body class="stadium-bg">
   <div class="overlay">
     <nav class="navbar">
       <div class="logo-container">
-        <!-- Fix: href should be just "./" for SPA base path -->
         <a href="./" data-link>
           <img src="logo.png" alt="CricEXT Logo" class="logo" />
         </a>
@@ -23,7 +32,6 @@
       <div class="hamburger" id="hamburger">&#9776;</div>
 
       <ul class="nav-links">
-        <!-- Fix: hrefs should be just page names, not full GitHub URLs -->
         <li><a href="home.html" class="nav-link" data-link>Home</a></li>
         <li><a href="cricext.html" class="nav-link" data-link>CricEXT</a></li>
         <li><a href="scores.html" class="nav-link" data-link>Live Scores</a></li>
@@ -36,15 +44,10 @@
     <!-- Dynamic content area -->
     <div id="app">
       <div class="scorecards-wrapper">
-        <!-- First 3 scorecards shown -->
         <section id="score-section" class="score-section">
           <!-- Scorecards will be dynamically injected here -->
         </section>
-
-        <!-- Overlay section for extra scores -->
         <div id="extra-score-section" class="score-overlay" style="display: none;"></div>
-
-        <!-- More Scores button -->
         <button id="more-scores-btn" style="display: none;">More Scores</button>
       </div>
     </div>
