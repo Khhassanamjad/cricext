@@ -14,7 +14,8 @@
   <div class="overlay">
     <nav class="navbar">
       <div class="logo-container">
-        <a href="/cricext/index.html" data-link>
+        <!-- Fix: href should be just "./" for SPA base path -->
+        <a href="./" data-link>
           <img src="logo.png" alt="CricEXT Logo" class="logo" />
         </a>
       </div>
@@ -22,11 +23,12 @@
       <div class="hamburger" id="hamburger">&#9776;</div>
 
       <ul class="nav-links">
-        <li><a href="/cricext/home.html" class="nav-link" data-link>Home</a></li>
-        <li><a href="/cricext/cricext.html" class="nav-link" data-link>CricEXT</a></li>
-        <li><a href="/cricext/scores.html" class="nav-link" data-link>Live Scores</a></li>
-        <li><a href="/cricext/about.html" class="nav-link" data-link>About Us</a></li>
-        <li><a href="/cricext/contact.html" class="nav-link" data-link>Contact Us</a></li>
+        <!-- Fix: hrefs should be just page names, not full GitHub URLs -->
+        <li><a href="home.html" class="nav-link" data-link>Home</a></li>
+        <li><a href="cricext.html" class="nav-link" data-link>CricEXT</a></li>
+        <li><a href="scores.html" class="nav-link" data-link>Live Scores</a></li>
+        <li><a href="about.html" class="nav-link" data-link>About Us</a></li>
+        <li><a href="contact.html" class="nav-link" data-link>Contact Us</a></li>
         <li><button id="toggle-theme" class="theme-btn">🌓</button></li>
       </ul>
     </nav>
