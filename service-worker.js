@@ -1,21 +1,22 @@
-const BASE = location.pathname;
-const FILES_TO_CACHE = [
-  `${BASE}`,
-  `${BASE}index.html`,
-  `${BASE}style.css`,
-  `${BASE}script.js`,
-  `${BASE}scores.json`,
-  `${BASE}tweets.json`,
-  `${BASE}logo.png`,
-  `${BASE}stadium.png`,
-  `${BASE}flags/india.png`,
-  `${BASE}flags/pakistan.png`,
-  `${BASE}flags/australia.png`,
-  `${BASE}flags/england.png`,
-  `${BASE}flags/south-africa.png`,
-  `${BASE}flags/new-zealand.png`,
-];
+const CACHE_NAME = 'cricext-cache-v1';
+const BASE_PATH = '/cricext';
 
+const FILES_TO_CACHE = [
+  `${BASE_PATH}/`,
+  `${BASE_PATH}/index.html`,
+  `${BASE_PATH}/style.css`,
+  `${BASE_PATH}/script.js`,
+  `${BASE_PATH}/scores.json`,
+  `${BASE_PATH}/tweets.json`,
+  `${BASE_PATH}/logo.png`,
+  `${BASE_PATH}/stadium.png`,
+  `${BASE_PATH}/flags/india.png`,
+  `${BASE_PATH}/flags/pakistan.png`,
+  `${BASE_PATH}/flags/australia.png`,
+  `${BASE_PATH}/flags/england.png`,
+  `${BASE_PATH}/flags/south-africa.png`,
+  `${BASE_PATH}/flags/new-zealand.png`,
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -46,4 +47,3 @@ self.addEventListener('fetch', (event) => {
     )
   );
 });
-
