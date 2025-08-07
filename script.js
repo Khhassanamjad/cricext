@@ -4,31 +4,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const hamburger = document.getElementById("hamburger");
   const navLinks = document.querySelector(".nav-links");
 
-  // Apply saved theme
   if (localStorage.getItem("theme") === "dark") {
     body.classList.add("dark");
   }
 
-  // Theme toggle
   toggle?.addEventListener("click", () => {
     body.classList.toggle("dark");
     const theme = body.classList.contains("dark") ? "dark" : "light";
     localStorage.setItem("theme", theme);
   });
 
-  // Hamburger toggle
   hamburger?.addEventListener("click", () => {
     navLinks?.classList.toggle("active");
   });
 
-  // Close nav on window resize
   window.addEventListener("resize", () => {
     if (window.innerWidth > 768) {
       navLinks?.classList.remove("active");
     }
   });
 
-  // Scorecard template
   function createScoreCard(match) {
     const card = document.createElement("div");
     card.className = "score-card";
@@ -46,11 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <p>${match.team2}: ${match.score2}</p>
       <strong>${match.status}</strong>
     `;
-
     return card;
   }
 
-  // Load scores for home screen (2-3 only)
   async function fetchScoresForHomeScreen() {
     try {
       const response = await fetch("scores.json");
@@ -86,7 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Load full scores (Live Scores page)
   function fetchScores() {
     const section = document.getElementById("score-section");
     if (!section) return;
@@ -102,7 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(err => console.error("Error loading full scores:", err));
   }
 
-  // Load Tweets (CricEXT page)
   function fetchTweets() {
     fetch("tweets.json")
       .then(res => {
@@ -141,7 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // SPA Routing Logic
   function loadPage(url) {
     fetch(url)
       .then(res => {
@@ -152,21 +142,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = html;
 
-        // Remove duplicate navbars
         const duplicateNav = tempDiv.querySelector(".navbar");
         if (duplicateNav) duplicateNav.remove();
 
-        // Extract and remove script tags
         const scripts = tempDiv.querySelectorAll("script");
         scripts.forEach(script => script.remove());
 
-        // Inject content
         document.getElementById("app").innerHTML = tempDiv.innerHTML;
 
-        // Highlight active tab
         highlightActiveTab(url);
 
-        // Re-run extracted scripts
         scripts.forEach(oldScript => {
           const newScript = document.createElement("script");
           if (oldScript.src) {
@@ -177,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
           document.body.appendChild(newScript);
         });
 
-        // Page-specific logic
         switch (url) {
           case "home.html":
             fetchScoresForHomeScreen();
@@ -191,43 +175,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       })
       .catch(() => {
-        document.getElementById("app").innerHTML = `
-          <div class="not-found">404 - Page Not Found</div>`;
+        document.getElementById("app").innerHTML = `<div class="not-found">404 - Page Not Found</div>`;
         highlightActiveTab("");
       });
   }
 
-  // Highlight active nav item
   function highlightActiveTab(currentUrl) {
     document.querySelectorAll("a[data-link]").forEach(link => {
       const href = link.getAttribute("href");
-      link.classList.toggle("active", href === currentUrl);
+      const path = currentUrl.split("/").pop();
+      link.classList.toggle("active", href === path);
     });
   }
 
-  // Link interception for SPA navigation
   document.querySelectorAll("a[data-link]").forEach(link => {
     link.addEventListener("click", e => {
       e.preventDefault();
       const url = link.getAttribute("href");
-      history.pushState(null, "", url);
-      loadPage(url);
+      if (location.pathname !== `/${url}`) {
+        history.pushState(null, "", url);
+        loadPage(url);
+      }
       navLinks?.classList.remove("active");
     });
   });
 
-  // Handle browser back/forward
   window.addEventListener("popstate", () => {
     const url = location.pathname.substring(1) || "home.html";
     loadPage(url);
   });
 
-  // Initial page load
   const initialPage = location.pathname.substring(1) || "home.html";
   loadPage(initialPage);
 });
 
-// Register service worker
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
