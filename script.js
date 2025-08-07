@@ -3,68 +3,63 @@ document.addEventListener("DOMContentLoaded", () => {
   const hamburger = document.getElementById("hamburger");
   const navLinks = document.querySelector(".nav-links");
 
-  // Redirect fix for GitHub Pages (force index.html)
-  if (location.pathname !== "/" && !location.pathname.includes("cricext")) {
-    location.replace("/cricext/");
-    return;
-  }
-
   // Theme toggle
   const body = document.body;
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme === "dark") {
     body.classList.add("dark");
-    toggle.checked = true;
+    if (toggle) toggle.checked = true;
   }
 
-  toggle.addEventListener("change", () => {
+  toggle?.addEventListener("change", () => {
     body.classList.toggle("dark");
     localStorage.setItem("theme", body.classList.contains("dark") ? "dark" : "light");
   });
 
   // Hamburger menu toggle
-  hamburger.addEventListener("click", () => {
-    navLinks.classList.toggle("show");
+  hamburger?.addEventListener("click", () => {
+    navLinks?.classList.toggle("show");
   });
 
   window.addEventListener("resize", () => {
     if (window.innerWidth > 768) {
-      navLinks.classList.remove("show");
+      navLinks?.classList.remove("show");
     }
   });
 
-  // Page routing based on hash
+  // SPA routing using hash (#home, #scores, #cricext)
   function loadPage() {
-    const route = location.hash.slice(1) || "/";
+    const route = location.hash.replace("#", "") || "home";
     let file = "home.html";
-    if (route === "/scores") file = "scores.html";
-    else if (route === "/cricext") file = "cricext.html";
+
+    if (route === "scores") file = "scores.html";
+    else if (route === "cricext") file = "cricext.html";
 
     fetch(file)
-      .then(res => res.text())
+      .then(res => {
+        if (!res.ok) throw new Error("Page not found");
+        return res.text();
+      })
       .then(html => {
         document.getElementById("app").innerHTML = html;
+        highlightActiveTab(route);
+
         if (file === "scores.html") fetchScores();
-        if (file === "cricext.html") fetchTweets();
-        highlightActiveTab();
+        else if (file === "cricext.html") fetchTweets();
       })
       .catch(() => {
-        document.getElementById("app").innerHTML = "<h2>Page not found</h2>";
+        document.getElementById("app").innerHTML = "<h2>404 - Page Not Found</h2>";
       });
   }
 
-  function highlightActiveTab() {
+  function highlightActiveTab(current) {
     const links = document.querySelectorAll(".nav-links a");
-    links.forEach(link => link.classList.remove("active"));
-    const currentHash = location.hash || "#/";
     links.forEach(link => {
-      if (link.getAttribute("href") === currentHash) {
-        link.classList.add("active");
-      }
+      const target = link.getAttribute("href").replace("#", "");
+      link.classList.toggle("active", target === current);
     });
   }
 
-  // Fetch scores from JSON
   function fetchScores() {
     fetch("scores.json")
       .then(res => res.json())
@@ -99,8 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
         extraSection.style.display = "none";
 
         moreBtn.addEventListener("click", () => {
-          extraSection.style.display = extraSection.style.display === "none" ? "flex" : "none";
-          moreBtn.textContent = extraSection.style.display === "none" ? "More Scores" : "Less Scores";
+          const isVisible = extraSection.style.display === "flex";
+          extraSection.style.display = isVisible ? "none" : "flex";
+          moreBtn.textContent = isVisible ? "More Scores" : "Less Scores";
         });
       });
   }
@@ -109,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return team.toLowerCase().replace(/\s+/g, "-") + ".png";
   }
 
-  // Fetch tweets from JSON
   function fetchTweets() {
     fetch("tweets.json")
       .then(res => res.json())
@@ -136,13 +131,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // Hash change listener
+  // Hash routing
   window.addEventListener("hashchange", loadPage);
   loadPage();
 
-  // Register service worker (optional)
+  // Service Worker
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/cricext/service-worker.js").catch(err => {
+    navigator.serviceWorker.register("service-worker.js").catch(err => {
       console.warn("Service Worker failed", err);
     });
   }
