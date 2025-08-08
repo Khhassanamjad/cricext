@@ -1,13 +1,14 @@
-const BASE_PATH = '/cricext'; // Important for GitHub Pages folder hosting
+const BASE_PATH = '/cricext'; // For GitHub Pages
 
 // Load page content into #app
 function loadPage(url) {
-  fetch(`${BASE_PATH}/${url}`)
+  fetch(new URL(url, document.baseURI))
     .then(res => {
       if (!res.ok) throw new Error('Page not found');
       return res.text();
     })
     .then(html => {
+      // Replace only the inner app section to avoid duplicating navbars
       document.getElementById('app').innerHTML = html;
       highlightActiveTab(url);
       if (url === 'cricext.html') fetchTweets();
@@ -21,8 +22,7 @@ function loadPage(url) {
 function highlightActiveTab(url) {
   document.querySelectorAll('a[data-link]').forEach(link => {
     link.classList.remove('active');
-    const linkHref = link.getAttribute('href');
-    if (linkHref === url) {
+    if (link.getAttribute('href') === url) {
       link.classList.add('active');
     }
   });
@@ -30,25 +30,21 @@ function highlightActiveTab(url) {
 
 // SPA link clicks
 document.addEventListener("click", (e) => {
-  if (e.target.matches("[data-link]")) {
-    e.preventDefault();
-    const href = e.target.getAttribute("href");
+  const link = e.target.closest("[data-link]");
+  if (!link) return;
 
-    history.pushState(null, null, href);
+  e.preventDefault();
+  const href = link.getAttribute("href");
+  const fullUrl = new URL(href, document.baseURI);
 
-    fetch(new URL(href, document.baseURI)) // ✅ respects <base>
-      .then((res) => res.text())
-      .then((html) => {
-        document.querySelector("#app").innerHTML = html;
-      })
-      .catch((err) => console.error("Page load error:", err));
-  }
+  history.pushState(null, null, fullUrl);
+  loadPage(href);
 });
 
-// Handle browser navigation (back/forward)
+// Handle browser navigation
 window.addEventListener('popstate', () => {
-  const path = location.pathname.replace(BASE_PATH + '/', '') || 'index.html';
-  loadPage(path);
+  const currentPath = location.pathname.replace(BASE_PATH + '/', '') || 'index.html';
+  loadPage(currentPath);
 });
 
 // Theme toggle
@@ -60,23 +56,17 @@ function toggleTheme() {
 
 function applySavedTheme() {
   const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark');
-  } else {
-    document.body.classList.remove('dark');
-  }
+  document.body.classList.toggle('dark', savedTheme === 'dark');
 }
 
 // Hamburger menu
 function toggleMenu() {
-  const navLinks = document.querySelector('.nav-links');
-  navLinks.classList.toggle('open');
+  document.querySelector('.nav-links').classList.toggle('open');
 }
 
 function closeMenuOnResize() {
-  const navLinks = document.querySelector('.nav-links');
   if (window.innerWidth > 768) {
-    navLinks.classList.remove('open');
+    document.querySelector('.nav-links').classList.remove('open');
   }
 }
 
@@ -173,7 +163,7 @@ function fetchTweets() {
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
-  // ✅ Handle redirect from 404.html with ?path=xyz
+  // Handle redirect from 404.html with ?path=xyz
   const query = new URLSearchParams(window.location.search);
   const spaPath = query.get("path");
   if (spaPath) {
