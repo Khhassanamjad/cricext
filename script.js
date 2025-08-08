@@ -29,13 +29,19 @@ function highlightActiveTab(url) {
 }
 
 // SPA link clicks
-document.addEventListener('click', e => {
-  const link = e.target.closest('a[data-link]');
-  if (link) {
+document.addEventListener("click", (e) => {
+  if (e.target.matches("[data-link]")) {
     e.preventDefault();
-    const href = link.getAttribute('href');
-    history.pushState(null, '', `${BASE_PATH}/${href}`);
-    loadPage(href);
+    const href = e.target.getAttribute("href");
+
+    history.pushState(null, null, href);
+
+    fetch(new URL(href, document.baseURI)) // ✅ respects <base>
+      .then((res) => res.text())
+      .then((html) => {
+        document.querySelector("#app").innerHTML = html;
+      })
+      .catch((err) => console.error("Page load error:", err));
   }
 });
 
